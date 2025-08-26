@@ -3,6 +3,7 @@
 use App\Models\Course;
 use App\Models\User;
 use App\Models\Application;
+use Carbon\Carbon;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -84,4 +85,22 @@ test('user cant delete other user application', function () {
     $response->assertForbidden();
 
     $this->assertDatabaseHas('course_user', ['id' => $application->id]);
+});
+
+test('user cannot enroll in already started course', function () {
+    $this->course->update(['start_date' =>  Carbon::now()->subWeek()->startOfWeek()]);
+
+    $response = $this->withHeader('Authorization', "Bearer $this->token")
+        ->postJson('/api/applications', [
+            'course_id' => $this->course->id,
+            'user_id' => $this->user->id,
+        ]);
+
+    $response->assertStatus(422)
+        ->assertJson(['error' => 'Курс уже начат']);
+
+    $this->assertDatabaseMissing('course_user', [
+        'user_id' => $this->user->id,
+        'course_id' => $this->course->id
+    ]);
 });
