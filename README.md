@@ -13,14 +13,17 @@
 
 ## Запуск приложения
 
+- Клонирование репозитория с GitHub
 ```bash
 git clone https://github.com/lacaz3tte/courses-api.git
 ```
 
+- Переход в директорию проекта
 ```bash
 cd courses-api
 ```
-  
+
+- Запуск Docker контейнера для установки Composer зависимостей
 ```bash
 docker run --rm \
     -u "$(id -u):$(id -g)" \
@@ -29,24 +32,37 @@ docker run --rm \
     laravelsail/php84-composer:latest \
     composer install --ignore-platform-reqs
 ```
+- Копирование файла окружения из примера
 ```bash
 cp .env.example .env
 ```
+
+- Запуск Docker контейнеров Sail в фоновом режиме
 ```bash
 ./vendor/bin/sail up -d
 ```
+
+- Генерация ключа приложения Laravel
 ```bash
 ./vendor/bin/sail artisan key:generate
 ```
+
+- Запуск миграций базы данных
 ```bash   
 ./vendor/bin/sail artisan migrate
 ```
+
+- Запуск сидеров базы данных
 ```bash        
 ./vendor/bin/sail artisan db:seed
 ```
+
+- Установка NPM зависимостей
 ```bash       
 npm install
 ```
+
+- Сборка фронтенд-ассетов в режиме разработки
 ```bash  
 npm run dev
 ```
